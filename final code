@@ -1,0 +1,1225 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+    int try = 0;
+    int ttt = 0;
+    int u =0;
+    int jj = 0;
+    int m = 0;
+    int unixo = 0;
+    int high = 0;
+
+    int id[20];
+    int delta0[20] , delta1[20], delta2[20] , delta3[20], pricee[20];
+    int b_index = 0;
+
+    int id_s[20];
+    int d0[20], d1[20], d2[20], d3[20], castablee[20], repeatablee[20];
+    int y_index = 0;
+
+    int id_l[20];
+    int l0[20], l1[20], l2[20], l3[20];
+    int l_index = 0;
+
+    int inv_0;
+    int inv_1;
+    int inv_2;
+    int inv_3;
+    int my_score = 0;
+    
+    int  process =0;
+    char *action = NULL;
+    int castablisation = 0;
+    int index_to_learn = 0;
+    int index_to_learning = 0;
+    int save = 0;
+    int index_of_brewing = 0;
+    int index_index_brewing = 0;
+    int i0 = 0;
+    int i1 = 0;
+    int i2 = 0;
+    int i3 = 0;
+    int v_score = 0;
+    static int numbersofspeels; 
+    int finishit = 0;
+    int vise[5][1];
+    int to_go = 0;
+    static int o = 0;
+
+
+    void     assign_b(int i)
+        {   
+            action = "BREW";
+            process = id[i];
+        }
+
+    void     assign_l(int i)
+        {   
+            action = "LEARN";
+            process = id_l[i];
+        }
+    
+    void    assign(int i)
+        {   
+            action = "CAST";
+            process = id_s[i];
+            castablisation = castablee[i];
+        }
+
+    int     sorting_reciepts()
+        {
+
+                int index  =  0; 
+                float j = 0;
+                int steps = 0;
+                int ssave = 10;
+                float coeffic = 0;
+
+                    while (index < b_index)
+                    {
+                    
+                        steps = 0;
+
+                        delta0[index ] *= -1;
+                        delta1[index ] *= -1;
+                        delta2[index ] *= -1;
+                        delta3[index ] *= -1;
+                        
+                        if (delta0[index] > 1 && inv_0 == 0) 
+                            steps += 1 * delta0[index];
+                        
+                        if ( (delta1[index]) > 0)
+                            {
+                                if (inv_0 >= 1 )
+                                    steps += 1 * delta1[index];
+                                else 
+                                    steps += 2 * delta1[index];
+
+                            }
+                        
+                        if ( ((delta2[index])) > 0)
+                            {
+                    
+                                if (inv_1 >= 1)
+                                    steps += 1 * delta2[index];
+                                else 
+                                {
+                                    if (inv_0 >= 1)
+                                        steps += 2 * delta2[index];
+                                    else 
+                                        steps += 3 * delta2[index];
+                                }
+                            }
+                        
+                        if ( ((delta3[index])) > 0)
+                        {
+                            if (delta2[index] >= 2)
+                                    steps += 1 * delta3[index];
+                            else 
+                            {
+                                if (inv_1 >= 1)
+                                    steps += 2 * delta3[index];
+                                else if (inv_1 < 1)
+                                    {
+                                        if (inv_0 == 0)
+                                            steps += 4 * delta3[index];
+                                        else 
+                                            steps += 3 * delta3[index];
+                                    } 
+                            }
+                        }
+                        
+                        coeffic = pricee[index] / steps * 10;
+                    
+                    // fprintf(stderr, " id = %d | pricee = %d | steps = %d | coeffic = %f\n ",id[index] ,pricee[index] , steps , coeffic);
+
+                        if (coeffic > j)
+                        {
+                            ssave = index;
+                            j = coeffic;
+                            
+                        }
+
+                        delta0[index ] *= -1;
+                        delta1[index ] *= -1;
+                        delta2[index ] *= -1;
+                        delta3[index ] *= -1;
+                        index++;
+                    }   
+
+                    high = ssave;
+
+    
+                    fprintf(stderr,"\n recette vise : id = %d | %d | %d | %d | %d | price = %d\n",
+                    id[high],delta0[high], delta1[high], delta2[high] , delta3[high] , pricee[high]);
+
+                    return (ssave);
+        }
+
+
+    int     casting()
+        {    
+            int need = -999;
+            int r = 0;
+            int index = 0;
+            int indextoindex = 0;
+
+            i0 = inv_0 + delta0[high];
+            i1 = inv_1 + delta1[high];      
+            i2 = inv_2 + delta2[high];
+            i3 = inv_3 + delta3[high];
+
+            fprintf(stderr  , "The differnce beetwen my bank & reciept ciblee ingrediens : \n");
+            fprintf(stderr  ,">>| i0 = %d | i1 = %d | i2 =%d | i3 = %d |<< \n\n", i0, i1, i2, i3);
+
+            if (i0 >= 0 && i1 >= 0 && i2 >= 0 && i3 >= 0)
+                {
+                    process = id[high];
+                    action = "BREW";
+                    fprintf(stderr, "brew in function casting\n");
+                    index_of_brewing++;
+                    finishit++;
+                }
+            else 
+            {
+                action = "CAST";
+
+            
+                if ( i1 < 0)
+                    {
+                        need = 1;
+                        r = 1;
+                        assign(1);
+                        if (!inv_0)
+                            {   
+                                r     = 0;
+                                need  = 0;
+                                assign(0);
+                            } 
+                    }
+
+                else if (i2 < 0 )
+                    {   
+                        need  = 2;
+                        r     = 2;
+                        assign(2);
+                
+                        if (!inv_1)
+                        { 
+                            r     = 1;
+                            need  = 1; 
+                            assign(1);
+
+                            if (!inv_0)
+                            {   
+                                r    = 0;
+                                need = 0;
+                                assign(0); 
+                            }
+                        }
+                    }
+                
+                else if (i3 < 0)
+                    {
+                        need  = 3;
+                        r     = 3;
+                        assign(3);
+                        if (!inv_2)
+                            {    
+                                need  = 2;
+                                r     = 2; 
+                                assign(2);   
+                                if (!inv_1)
+                                    {   
+                                        r     = 3;
+                                        need  = 3;
+                                        assign(1);         
+                                        if (!inv_0)        
+                                        {
+                                            r     = 0;
+                                            need  = 0;
+                                            assign(0);
+                                        }
+                                    }    
+                            }
+                    }
+
+                    else  if (i0 < 0)
+                                    {
+                                            need  = 0;
+                                            r     = 0;
+                                            assign(0);
+                                    }
+            
+                    if ((i3 < 0 || i2 < 0 || i1 < 0 || i0 < 0) && (y_index >= 3)) 
+                    {
+                        index = 4;
+                        while (index < y_index)
+                        {
+                                if (( (need == 3 && d3[index] >= 1 && d2[index] + inv_2 >= 0 && d1[index] + inv_1 >= 0 && d0[index] + inv_0  >= 0)
+                                    || (need == 2 && d2[index] >= 1 && d3[index] + inv_3 >= 0 && d1[index] + inv_1 >= 0 && d0[index] + inv_0 >= 0)
+                                    || (need == 1 && d1[index] >= 1 && d3[index] + inv_3 >= 0 && d2[index] + inv_2 >= 0 && d0[index] + inv_0 >= 0)
+                                    || (need == 0 && d0[index] >= 1 && d3[index] + inv_3 >= 0 && d2[index] + inv_2 >= 0 && d1[index] + inv_1 >= 0))
+                                    && (((inv_0 + inv_1 + inv_2 + inv_3) + (d0[index] + d1[index] + d2[index] + d3[index])) <= 10) && castablee[index] == 1)
+                                    {
+                                        assign(index);
+                                        r = 100;
+                                        indextoindex = index;
+                                    }
+                                index++;
+                        }
+
+                    }       
+                return  0;
+            }
+
+            
+
+
+
+            return need;
+        }
+
+    int     cast_the_learning_speels(int itiry)
+        {
+
+            if (delta3[high] >= 1 && l3[0] >= 1)
+                {
+                    int utile = l3[0];
+                    while (utile-- >= 0)
+                        itiry++;
+                    if (delta2[high] >= 1 && l2[0] >= 1)
+                        { 
+                            utile = l2[0];
+                            while (utile-- >= 0)                         
+                                itiry++;
+                            if (delta1[high]  >= 1 && l0[0] >= 1)
+                                {
+                                    utile = l2[0];
+                                    while (utile-- >= 0)
+                                        itiry++;
+                                }
+                        }
+                }
+        
+            return itiry;
+        }
+
+    void    boost_my_game(int i, int u, int y, int j)
+        {
+            int index = 0;
+            int c0,c1,c2,c3;
+            
+            while (index < b_index)
+            {
+                c0 = inv_0 + delta0[index];
+                c1 = inv_1 + delta1[index];
+                c2 = inv_2 + delta2[index];
+                c3 = inv_3 + delta3[index];                 
+
+                if (c0 >= 0 && c1 >= 0 && c2 >= 0 && c3 >= 0)
+                {
+                    process = id[index];
+                    action = "BREW";
+                    fprintf(stderr, "c0 = %d | c1 = %d | c2 = %d | c3 = %d | \nbrew in function boost_my_game\n", c0 , c1 , c2 , c3);
+                    index_of_brewing++;
+                    break;
+                }
+                
+                index++;
+            }
+
+        }
+
+    int    finish_it()
+        {
+            int index = 0;
+            int c0,c1,c2,c3;
+            int c; 
+            int save = 0;
+            int save_index = 0;
+
+            if ((inv_0 + inv_1 + inv_2 + inv_3) == 0)
+            {
+                assign(0);
+                return 0;
+            }
+
+            while (index < b_index)
+            {
+                c = 0;
+
+                c0 = inv_0 + delta0[index];
+                c1 = inv_1 + delta1[index];
+                c2 = inv_2 + delta2[index];
+                c3 = inv_3 + delta3[index];                 
+
+                c += (c0 >= 0) ?  1:0;   
+                c += (c1 >= 0) ?  1:0;
+                c += (c2 >= 0) ?  1:0;
+                c += (c3 >= 0) ?  1:0;
+                
+                if ((1) && (c == 4))
+                    {
+                        action = "BREW";
+                    fprintf(stderr, "brew in function finish_it\n");      
+                        process = id[index];
+                        index_of_brewing++;
+                        break;
+                    }
+                else if (save < c)
+                {
+                    save = c;
+                    save_index = index;
+                }
+                index++;
+            }
+
+            fprintf(stderr, "vise sur ; id = %d | price = %d\n",id[save_index] , pricee[save_index]);
+            
+
+            c0 = inv_0 + delta0[save_index];
+            c1 = inv_1 + delta1[save_index];
+            c2 = inv_2 + delta2[save_index];
+            c3 = inv_3 + delta3[save_index];    
+
+            if (c1 < 0)
+            {
+                index = 0;
+                int i = 0;
+                while (index < y_index)
+                    {
+                        if (d1[index] >= 1 && inv_0 >= (d0[index] * -1) && d2[index] + inv_2 >= 0 && d3[index] + inv_3 >= 0)
+                            {
+                                assign(index);
+                                i = 1;
+                                break;
+                            }
+                        index++;
+                    }
+            }
+
+            return 0;
+        }
+
+    int     trigged()
+        {
+            int index= 0;
+            int c0,c1,c3,c2;
+            int c = 0;
+
+            while (index < b_index)
+            {
+                c = 0;
+
+                c0 = inv_0 + delta0[index];
+                c1 = inv_1 + delta1[index];
+                c2 = inv_2 + delta2[index];
+                c3 = inv_3 + delta3[index];                 
+                
+                if (c0 >= 0 && c1 >= 0 && c2 >= 0 && c3 >= 0)
+                    {
+                        action = "BREW";
+                        process = id[index];
+                        index_of_brewing++;
+                        fprintf(stderr, "brew in function trigged\n");
+                        return 0;
+                    }
+                index++;
+            }
+            return 0;
+        }
+
+    int     trigged_d()
+        {
+            int index = 0;
+            int c0,c1,c2,c3;
+            int save =   0;
+            int save_s = 0;
+
+            while (index < b_index)
+            {
+                c0 = inv_0 + delta0[index];
+                c1 = inv_1 + delta1[index];
+                c2 = inv_2 + delta2[index];
+                c3 = inv_3 + delta3[index];    
+                if (c0 >= 0 && c1 >= 0 && c2 >= 0 && c3 >= 0)
+                        {   
+                            action  = "BREW";
+                            fprintf(stderr, "brew in function trigged_id\n");
+                            process = id[save];
+                            return 0; 
+                        }
+                if (c1 < 0 && c2 >= 0 && c3 >= 0 && c0 >= 0)
+                    {
+                        save = index;
+                        break;
+                    }
+
+                index++;
+            }
+            fprintf(stderr, "vise sur ; id = %d | price = %d\n",id[save] , pricee[save]);
+
+            
+
+                index = 0;
+                while (index < y_index)
+                {
+                    if (d1[index] > 2)
+                    {
+                        save_s = index;
+                        break;
+
+                    }
+                    index++;
+                }
+
+                if (inv_0 == 0)
+                    {
+                        assign(0);
+                        return 0;
+                    }
+                else 
+                    {
+                        assign(1);
+                        return 0;
+                    }
+                    assign(save_s);
+
+                return 0;
+
+        }
+
+    int     do_the_right_cast(int idd)
+        {
+
+            int index = 0;
+            int si = 0;
+            int need = 0;
+
+            while (index < y_index)
+            {
+                if (id_s[index] == idd)
+                    {
+                        si = index;
+                        break;
+                    }
+                index++;
+            }
+
+            if (d0[si] < 0)
+            {
+                if (inv_0 + delta0[high] < 0)
+                        assign(0);
+            }
+            if (d1[si] < 0)
+            {
+                if (inv_1 + delta1[high] < 0)
+                    assign(1);
+
+            }
+            if (d2[si] < 0)
+            {
+                if (inv_2 + delta2[high] < 0)
+                    assign(2);
+            }
+            if (d3[si] < 0)
+            {
+                if (inv_3 + delta3[high] < 0)
+                    assign(3);
+
+            }
+            return 0;
+        }
+
+    int     check_final()
+        {
+            int index = 0;
+            int you = 0;
+
+            if (delta3[high] + inv_3 >= 0)
+                    {
+                        if (delta2[high] + inv_2 >= 0)
+                        {
+                            if (delta1[high] + inv_1 >= 0)
+                            {
+                                if (delta0[high] + inv_0 >= 0)
+                                {
+                                    action = "BREW";
+                                    process = id[high];
+                                    index_of_brewing++;
+                                    you++;
+                        
+                                }
+
+                            }
+                        }
+                    }
+
+            if (you){
+
+                    while (index < b_index)
+                    {
+                        if (delta3[index] + inv_3 >= 0)
+                            {
+                                if (delta2[index] + inv_2 >= 0)
+                                {
+                                    if (delta1[index] + inv_1 >= 0)
+                                    {
+                                        if (delta0[index] + inv_0 >= 0)
+                                        {
+                                            action = "BREW";
+                                            process = id[index];
+                                            index_of_brewing++;
+                                            break;
+                                        }
+
+                                    }
+                                }
+                            }
+                        index++;
+                    }
+            }
+            
+            return 0;
+        }
+
+    int     smart_process()
+        {
+            int index = 0;
+            int c0,c1,c2,c3;
+            int j = 0;
+            int totale = 0;
+            int save_total = 9999990;
+            int stepso[100][100];
+            int i = 0;
+            int d = 0;
+            int o = 0;
+            int oo[b_index + 1];
+            static int ii; 
+            
+            if (to_go)
+            {
+                action = "CAST";
+                process = stepso[index][ii++];
+                return 0;
+            }
+            else { 
+                    while (index < b_index)
+                    {
+                        o = 0;
+                        c0 = inv_0 + delta0[index];
+                        c1 = inv_1 + delta1[index];
+                        c2 = inv_2 + delta2[index];
+                        c3 = inv_3 + delta3[index];
+                        
+                        if (c2 < 0)
+                        {
+                            d = delta2[index];
+                            while (1)
+                            {
+                                    j = 0;
+                                    while (j < y_index)
+                                    {
+                                        if (l2[j] >= 1)
+                                        {
+                                            if (l1[j] < 0 || l0[j] < 0)
+                                            {
+                                                totale = l3[j] * 1000 + l2[j] * 100 + (l1[j] - inv_1) * 10 + (l0[j] + inv_0) * 1;
+                                                if (totale < save_total)
+                                                {
+                                                    save_total = totale;
+                                                    i = j;
+                                                }
+                                            } 
+                                        }
+                                        j++;
+                                    }
+                                    if (delta2[index] + l2[i] >= 0)
+                                    {
+                                        stepso[index][o++] = l2[i];
+                                        break;
+                                    }
+                                    else 
+                                    {
+                                        stepso[index][o++] = l2[i];
+                                    }
+                            }
+                        }
+                        
+                        if (c1 < 0)
+                        {
+                            d = delta1[index];
+                        while (1)
+                            {
+                                    j = 0;
+                                    while (j < y_index)
+                                    {
+                                        if (l1[j] >= 1)
+                                        {
+                                            if (l0[j] < 0 || l0[j] < 0)
+                                            {
+                                                totale = l3[j] * 1000 + l2[j] * 100 + (l1[j] - inv_1) * 10 + (l0[j] + inv_0) * 1;
+                                                if (totale < save_total)
+                                                {
+                                                    save_total = totale;
+                                                    i = j;
+                                                }
+                                            } 
+                                        }
+                                        j++;
+                                    }
+                                    if (delta1[index] + l1[i] >= 0)
+                                    {
+                                        stepso[index][o++] = id_s[i];
+                                        break;
+                                    }
+                                    else 
+                                    {
+                                        stepso[index][o++] = id_s[i];
+                                    }
+                            }
+                        }
+                        oo[index] = o;
+                        index++;
+                    }
+
+                    int save_o = 100;
+                    int index_o = 0;
+                    index = 0;
+                    while (index < b_index)
+                    {
+                        if (save_o > oo[index])
+                        {
+                            save_o = oo[index];
+                            index_o = index;
+                        }
+                        index++;
+                    }
+                    to_go = 1;
+                }
+            return 0;
+        }
+
+    int extra_smart()
+        {
+            int  def  = 0;
+            int  def1 = 0;
+            int  save_d = 0;
+            int  save1 = 0;
+            int  p[100];
+            int indexx = 0;
+
+
+
+            
+            if (o > 0)
+            {
+                if (o < 0)
+                    return 0;
+                if ((delta3[0] + inv_3 + delta2[0] + inv_2 + delta1[0] + inv_1 + delta0[0] + inv_0) >= 0)
+                    {
+                                action = "BREW";
+                                process = id[0];
+                                fprintf(stderr, "brew in function extra smart\n");
+                                index_of_brewing = 1;
+                                return 0;
+                    }
+                else 
+                    assign(p[o--]);
+                fprintf(stderr, "smart\n");
+            }
+
+            if (o <= 0)
+            {
+                o = -1;
+                if (delta3[0] < 0)
+                {
+                    def = inv_3 + delta3[0];
+
+                    int index = 0;
+                    while (index < y_index)
+                    {
+                        def1 = def + d3[index];
+
+                        if (save_d > def1)
+                        {
+                            save_d = def1;
+                            save1 = index;
+                        }
+                        index++;
+                    }
+
+                    p[++o] = index;
+                    index = save1;
+
+                    if (d2[index] < 0)
+                    {
+                        def = d2[index] + inv_1;
+                        indexx = 0;
+
+                        while (index < y_index)
+                        {
+
+                            def1 = def +  (d3[indexx] * 3) + (d2[indexx] * 2)  + (d1[indexx] + inv_1) + (d0[indexx] * 1) ;
+
+                            if (save_d > def1)
+                            {
+                                save_d = def1;
+                                save1 = index;
+                            }
+                            index++;
+                        }
+
+                        indexx = save1;
+
+                        int i = 0;
+                        i = d2[index];
+                        
+                        while (i < 0)
+                        {
+                            i  += d2[indexx];
+                            p[++o] = indexx;
+                        }  
+                    }
+                    
+                    save_d = save1 =  0;
+
+                    if (d1[index] + inv_1 <= 0)
+                    {
+                        def = d1[index] + inv_1;
+                        indexx = 0;
+
+                        while (index < y_index)
+                        {
+
+                            def1 = def +  (d3[indexx] * 3) + (d2[indexx] * 2)  + (d1[indexx] + inv_1) + (d0[indexx] * 1) ;
+
+                            if (save_d > def1)
+                            {
+                                save_d = def1;
+                                save1 = index;
+                            }
+                            index++;
+                        }
+
+                        indexx = save1;
+
+                        int i = 0;
+                        i = d1[index];
+                        
+                        while (i < 0)
+                        {
+                            i  += d1[indexx];
+                            p[++o] = indexx;
+                        }   
+                    }
+
+
+                    if (d0[index] < 0)
+                    {
+                        p[++o] = 0;
+                    }
+                }
+
+
+            }
+
+
+
+
+
+
+            return 0;
+        }
+
+    int check_all_positive()
+        {
+            int index = 0;
+            int need  = 0;
+            int save = 0;
+
+            while (index < y_index)
+            {
+                if (d0[index] >= 0  && d1[index] >= 1 && d2[index] >= 0 && d3[index] >= 0)
+                    {  need = 1 ; save = index; }
+
+                else if (d0[index] >= 0  && d1[index] >= 0 && d2[index] >= 1 && d3[index] >= 0)
+                    {  need = 2 ; save = index; }
+                else if (d0[index] >= 0  && d1[index] >= 0 && d2[index] >= 0 && d3[index] >= 1)
+                    {  need = 3 ; save = index; }
+                
+                index++;
+            }
+
+            index = 0;
+            while (index < b_index)
+            {
+                    if (delta0[index] + inv_0 >= 0  && delta1[index] + inv_1  <  0  && delta2[index] + inv_2  >= 0 &&  delta3[index] + inv_3  >= 0 && ( need = 1))
+                    assign(save);
+                else if (delta0[index] + inv_0 >= 0 && delta1[index] + inv_1  >=  0 && delta2[index] + inv_2  < 0 &&  delta3[index] + inv_3  >= 0 && ( need = 2))
+                    assign(save);
+                else if (delta0[index] + inv_0 >= 0 && delta1[index] + inv_1  >=  0 && delta2[index] + inv_2  >= 0 &&  delta3[index] + inv_3  < 0 && ( need = 3))
+                    assign(save);
+                else if (delta0[index] + inv_0 >= 0 && delta1[index] + inv_1  >=  0 && delta2[index] + inv_2  >= 0 &&  delta3[index] + inv_3  >= 0)
+                {
+                    
+                    action = "BREW";
+                    process = id[index];
+                    index_index_brewing = index_of_brewing = 1;
+                    return 0;
+                }
+                
+                index++;
+            }
+
+
+
+
+            return 0;
+        }
+    
+int main()
+{
+    
+    while (1) {
+        // the number of spells and recipes in play
+        int action_count;
+        scanf("%d", &action_count);
+
+        for (int i = 0; i < action_count; i++)
+        {
+            
+            // the unique ID of this spell or recipe
+            int action_id;
+            // in the first league: BREW; later: CAST, OPPONENT_CAST, LEARN, BREW
+            char action_type[21];
+            // tier-0 ingredient change
+            int delta_0;
+            // tier-1 ingredient change
+            int delta_1;
+            // tier-2 ingredient change
+            int delta_2;
+            // tier-3 ingredient change
+            int delta_3;
+            // the price in rupees if this is a potion
+            int price;
+            // in the first two leagues: always 0; later: the index in the tome if this is a tome spell, equal to the read-ahead tax
+            int tome_index;
+            // in the first two leagues: always 0; later: the amount of taxed tier-0 ingredients you gain from learning this spell
+            int tax_count;
+            // in the first league: always 0; later: 1 if this is a castable player spell
+            bool castable;
+            // for the first two leagues: always 0; later: 1 if this is a repeatable player spell
+            bool repeatable;
+            int _castable;
+            int _repeatable;
+            scanf("%d%s%d%d%d%d%d%d%d%d%d", &action_id, action_type, &delta_0, &delta_1, &delta_2, &delta_3, &price, &tome_index, &tax_count, &_castable, &_repeatable);
+            castable  = _castable;
+            repeatable = _repeatable;
+            
+            
+            fprintf(stdin, "id = %d|type= %s|d0 = %d|d1 = %d| d2 = %d | d3 = %d | price = %d |tome = %d|tax = %d| %d | %d\n", action_id ,action_type ,delta_0, delta_1, delta_2, delta_3, price , tome_index, tax_count, _castable, _repeatable);
+            
+            if (!strcmp(action_type, "BREW"))
+            {
+                    id[i] = action_id;
+                delta0[i] = delta_0;
+                delta1[i] = delta_1;
+                delta2[i] = delta_2;
+                delta3[i] = delta_3;
+                pricee[i] = price;
+                b_index++;
+            }
+           if (!strcmp(action_type, "LEARN"))
+            {
+                 id_l[l_index] = action_id;
+                l0[l_index] = delta_0;
+                l1[l_index] = delta_1;
+                l2[l_index] = delta_2;
+                l3[l_index] = delta_3;
+                l_index++;
+            }
+           if (!strcmp(action_type, "CAST"))
+            {
+              id_s[y_index] = action_id;
+                d0[y_index] = delta_0;
+                d1[y_index] = delta_1;
+                d2[y_index] = delta_2;
+                d3[y_index] = delta_3;
+                castablee[y_index]  = _castable;
+                repeatablee[y_index] = _repeatable;
+                y_index++;
+            }
+
+        }
+                    //////////////////////////////////
+                    // READING INVENTRIE OR MY BANK //
+                    /////////////////////////////////
+
+        for (int i = 0; i < 2; i++)
+        {
+           int inv_00, inv_01, inv_02, inv_03;
+           int score;
+           scanf("%d%d%d%d%d", &inv_00, &inv_01, &inv_02, &inv_03, &score);
+           if (i == 0)
+                {
+                    inv_0 = inv_00;
+                    inv_1 = inv_01;
+                    inv_2 = inv_02;
+                    inv_3 = inv_03;
+                    my_score = score;
+                }
+            else 
+                v_score = score;
+        }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////  affichage des donnes /////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        int r = 0; 
+        fprintf(stderr,"\nBREW :\n");
+        while (r < b_index)
+            {
+                fprintf(stderr, "id = %d | %d | %d | %d | %d | price = %d |\n",
+                id[r], delta0[r], delta1[r], delta2[r], delta3[r], pricee[r]);
+                r++;
+            }
+        
+        r = -1;
+        fprintf(stderr,"\nSpeel :\n");
+        while (++r < y_index)
+           fprintf(stderr, "id_s = %d | %d | %d | %d | %d | castable = %d| rep = %d |\n",
+            id_s[r], d0[r], d1[r], d2[r], d3[r], castablee[r], repeatablee[r]);
+
+        r = -1;
+        fprintf(stderr,"\nLEARN :\n");
+         while (++r < l_index)
+           fprintf(stderr, "id_l = %d | %d | %d | %d | %d |\n"
+           ,id_l[r], l0[r], l1[r], l2[r], l3[r]);   
+        
+        fprintf(stderr,"\nmy bank :\n");
+        fprintf(stderr,"inv_0 = %d | inv_1 = %d | inv_2 = %d | inv_3 = %d\n",
+         inv_0,inv_1, inv_2, inv_3);
+
+
+//////// TAKE THE RIGHT RECIEPT TO BREW ////////////////
+    
+    int need = 0;
+    int itiry  = 0;  
+    int *ity;  
+
+    high = sorting_reciepts();
+     
+     if (my_score < v_score && index_index_brewing > 4)
+                {
+                    int save = pricee[0];
+                    int save_i = 0;
+                    int index = 0;
+
+                    index = 0;
+                    while (index < b_index)
+                    {
+                        if (save > pricee[index])
+                            {
+                                save = pricee[index];
+                                save_i = index;
+                            }
+                            index++;
+                    }
+                    high = index;
+                }
+                   
+    need =  casting();
+
+    itiry = cast_the_learning_speels(itiry);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////// LEARN //////////////////////////////////////////////////////////
+    
+
+        int id_to_learn = 0; 
+        char *procii ; 
+        int index = 0;
+
+ 
+        if (index_to_learning < 5)
+            {
+                id_to_learn = id_l[index];
+                procii = "LEARN"; 
+                index_to_learning++;
+            }
+        else 
+            {
+                index = 0;
+                while (index < l_index)
+                {
+                    if (l3[index] >= 0 && l2[index] >= 0 &&  l1[index] >= 0 && l0[index] >= 0)
+                        {
+                           id_to_learn = id_l[index];
+                            procii = "LEARN";
+                            index_to_learning++;
+                            break;
+                        }
+                index++;
+                }
+            }
+        
+////////////////////////////////////////////////////
+///// PROTECT THE NOT ENOUGH ESPACE ON INVENTRIE ///
+////////////////////////////////////////////////////
+        
+        index = 0;
+        
+        while (index < y_index)
+        {
+            if (process == id_s[index])
+            {
+                castablisation = castablee[index];
+                break;
+            }
+            index++;
+        }
+        
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+
+
+        if (!strncmp(action, "CAST", strlen(action)) && ( ((inv_0 + inv_1 + inv_2 + inv_3) + (d0[index] + d1[index] + d2[index] + d3[index])) > 10))
+            {   
+                index = 0;
+                while (index < b_index)
+                {
+                    if (inv_0 + delta0[index] >= 0 && inv_1 + delta1[index]>= 0 && inv_2 + delta2[index] >= 0 && inv_3 + delta3[index] >= 0)
+                        {
+                            action = "BREW";
+                            process = id[index];
+                            fprintf(stderr, "brew in function main\n");
+                            index_of_brewing = 1;
+                            break;
+                        }
+                        index++;
+                }
+
+                if (index_of_brewing == 0)
+                    {
+                        fprintf(stderr, "EROOR\n");
+                    }
+            }
+
+            boost_my_game(inv_0 , inv_1 , inv_2, inv_3);
+
+            if (index_index_brewing >= 4 && my_score >= v_score)
+                finish_it();
+
+                /*if (index_index_brewing >= 4 && my_score <= v_score)
+                    trigged();
+                if (index_index_brewing >= 4 && my_score == v_score)
+                    trigged_d();
+
+                if ( (!strncmp(action ,"CAST", strlen(action))) && index_to_learning == 5 && index_index_brewing <= 1)
+                        do_the_right_cast(process);
+                    
+                // smart_process();
+                //extra_smart();*/
+          
+            int time = 1;
+                                int t = 0;
+
+            check_final();
+            if (my_score < v_score && index_index_brewing > 4 && 0)
+                {
+                    int save = pricee[0];
+                    int save_i = 0;
+
+                    index = 0;
+                    while (index < b_index)
+                    {
+                        if (save > pricee[index])
+                            {
+                                save = pricee[index];
+                                save_i = index;
+                            }
+                            index++;
+                    }
+                    
+                    int i0 = inv_0 + delta0[save_i];
+                    int i1 = inv_1 + delta1[save_i];
+                    int i2 = inv_2 + delta2[save_i];
+                    int i3 = inv_3 + delta3[save_i];
+
+                    if (i0 >= 0 && i1 >= 0 && i2 >= 0 && i3 >= 0)
+                    {
+                        assign_b(save_i);
+                        return 0;
+                    }
+                    index = 0;
+                    while (index < y_index)
+                    {
+                        if (i1 >= 0)
+                            break;
+                        else 
+                        {
+                            if (d0[index] >= 0 && d1[index] >= 1 && d2[index] >= 0 && d3[index] >= 0)
+                                {
+                                    while ( repeatablee[index] && ((i1) <= 0) )
+                                    {
+                                            i1 += d1[index];
+                                            time++;
+                                    }
+                                    action = "CAST";
+                                    process = id_s[index];
+                                    t = 1;
+                                } 
+                        }
+                        index++;
+
+                    }
+
+
+                }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        fprintf(stderr,"action = %s | process = %d| castabilisation = %d\n", action , process, castablisation);
+        
+
+        l_index = y_index = b_index = index = 0;
+
+
+        if ( save != id_to_learn)
+            try++;
+       if (t && castablisation)
+       {
+           printf("%s %d %d\n", action, process, time);
+       } 
+       else if ((((index_to_learning && save != id_to_learn) && ((inv_0 + inv_1 + inv_2 + inv_3) > 2)) || ((index_to_learning &&  try == 3) && ((inv_0 + inv_1 + inv_2 + inv_3) > 2)) ) && (!index_of_brewing))
+            {
+                try = 0;
+                printf("%s %d  Oh... I see...\n",procii, id_to_learn );
+                save = id_to_learn;
+                numbersofspeels++;
+            }
+        else     
+        {
+            char *s;
+            s = (!strncmp(action ,"BREW", strlen(action))) ? "BOOM..!!":"Emmmm..";
+            (!strncmp(action ,"BREW", strlen(action))) ? index_index_brewing++:index_index_brewing;
+
+            if (castablisation || !strncmp(action ,"BREW", strlen(action)))
+                printf("%s %d %s\n",action, process, s); 
+            else 
+               printf("REST YuHuhUHu...\n");
+        }
+       
+
+
+
+    }
+
+    return 0;
+}
